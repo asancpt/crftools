@@ -5,7 +5,7 @@
 #'
 #' @param CRFcsv A filename of CRF csv file, usually exported from PDFCRF
 #' @param Dictionaryxlsx A filename of data dictionary xlsx file
-#' @importFrom tidyr spread
+#' @importFrom tidyr separate
 #' @import dplyr
 #' @import xlsx
 #' @export

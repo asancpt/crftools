@@ -3,4 +3,4 @@
 export(crfdic)
 import(dplyr)
 import(xlsx)
-importFrom(tidyr,spread)
+importFrom(tidyr,separate)
