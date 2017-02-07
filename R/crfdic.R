@@ -51,7 +51,7 @@ crfdic <- function(CRFcsv, Dictionaryxlsx){
                   EXCEPT %>% select(VAR) %>% filter(!is.na(VAR)) %>% t() %>% as.vector())
 
     PDF.variable <- suppressWarnings(PDF.variable.raw %>% filter(PVAR != "") %>%
-        separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
+        tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
 
     df1 = unique(na.omit(PDF.variable$PVAR))
     df2 = unique(Variable)
