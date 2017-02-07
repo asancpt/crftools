@@ -2,13 +2,13 @@
 
 ![](https://i.imgur.com/SPXkoJE.jpg)
 
-> When people think about computer science, they imagine people with pocket protectors and thick glasses who code all night. - *Marissa Mayer*
+> Put your heart, mind, and soul into even your smallest acts. This is the secret of success. - *Swami Sivananda*
 
-이 패키지는 crftools입니다. 
+이것은 R 패키지 `crftools` 입니다. 
 
 ## Description
 
-- 현재는 하나의 function만 존재하며 CRF에서 추출한 csv와 data dictionary의 비교를 통해 서로 적합한 variables를 기술하고 있는지를 평가합니다.
+- 현재는 하나의 function만 존재하며 CRF에서 추출한 csv와 data dictionary의 비교를 통해 서로 기술한 variables를 갖고 있는지를 평가합니다.
 
 ## Installation
 
