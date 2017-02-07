@@ -7,12 +7,12 @@
 crfdic(CRFcsv, Dictionaryxlsx)
 }
 \arguments{
-\item{CRFcsv}{A filename of CRF csv file, usually exported from PDFCRF}
+\item{CRFcsv}{A filename of CRF csv file, exported from PDFCRF}
 
 \item{Dictionaryxlsx}{A filename of data dictionary xlsx file}
 }
 \value{
-List of output data of comparison between CRF and data dictionary
+List of output data of comparison of variables between a CRF-derived csv file and a data dictionary
 }
 \description{
 \code{crfdic} uses CRF-derived csv file and a data dictionary excel to compare
