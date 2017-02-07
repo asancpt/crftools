@@ -1,5 +1,5 @@
 #' Compare variable names between CRF and data dictionary
-
+#'
 #' \code{crfdic} uses CRF-derived csv file and a data dictionary excel to compare
 #' variable names of each file
 #'
@@ -36,8 +36,8 @@ crfdic <- function(CRFcsv, Dictionaryxlsx){
 
     EXCEPT <- read.xlsx(Dictionaryxlsx, sheetName = "EXCEPT", startRow = 1,
                         stringsAsFactors = FALSE, encoding="UTF-8", colIndex = 1:5) %>%
-        select(VAR = 1, Co13 = 2, Co2 = 3, Co45 = 4, VARLABEL = 5) %>%
-        filter(Co45 == "V")
+        select(VAR = 1, Prev1 = 2, Prev2 = 3, Focus = 4, VARLABEL = 5) %>%
+        filter(Focus == "V")
 
     ## PDF CSV
     Cohort13raw <-  t(read.csv(CRFcsv, stringsAsFactors = FALSE, header = FALSE))[,1]
@@ -59,8 +59,8 @@ crfdic <- function(CRFcsv, Dictionaryxlsx){
     ## ----include = FALSE-----------------------------------------------------
     Suffix = read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
                        stringsAsFactors = FALSE, encoding="UTF-8", colIndex = 1:6) %>%
-        select(Section = 1, Co13 = 2, Co2 = 3, Co45 = 4, Category = 5, Suffix = 6) %>%
-        filter(Co45 == "V")
+        select(Section = 1, Prev1 = 2, Prev2 = 3, Focus = 4, Category = 5, Suffix = 6) %>%
+        filter(Focus == "V")
     Suffix.df1 = unique(na.omit(PDF.variable$At))
     Suffix.df2 = unique(na.omit(Suffix$Suffix))
 

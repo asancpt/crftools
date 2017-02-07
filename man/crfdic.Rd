@@ -2,9 +2,7 @@
 % Please edit documentation in R/crfdic.R
 \name{crfdic}
 \alias{crfdic}
-\title{Compare variable names between CRF and data dictionary
-\code{crfdic} uses CRF-derived csv file and a data dictionary excel to compare
-variable names of each file}
+\title{Compare variable names between CRF and data dictionary}
 \usage{
 crfdic(CRFcsv, Dictionaryxlsx)
 }
@@ -17,7 +15,6 @@ crfdic(CRFcsv, Dictionaryxlsx)
 List of output data of comparison between CRF and data dictionary
 }
 \description{
-Compare variable names between CRF and data dictionary
 \code{crfdic} uses CRF-derived csv file and a data dictionary excel to compare
 variable names of each file
 }
