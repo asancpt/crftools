@@ -1,10 +1,9 @@
-R package: crftools
+# R package: crftools
 
 > When people think about computer science, they imagine people with pocket protectors and thick glasses who code all night.
-> Marissa Mayer
+> - *Marissa Mayer*
 
 이 패키지는 crftools입니다. 
-
 
 ## Description
 
