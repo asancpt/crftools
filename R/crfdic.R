@@ -5,6 +5,7 @@
 #'
 #' @param CRFcsv A filename of CRF csv file, exported from PDFCRF
 #' @param Dictionaryxlsx A filename of data dictionary xlsx file
+#' @param Focus Column name of data dictionary which focuses analysis
 #' @importFrom tidyr separate
 #' @import dplyr
 #' @import xlsx
@@ -12,10 +13,10 @@
 #' @return List of output data of comparison of variables between a CRF-derived csv file and a data dictionary
 #' @examples
 #'\dontrun{
-#'crfdic(CRFcsv = "foo.csv", Dictionaryxlsx = "foo.xlsx")
+#'crfdic(CRFcsv = "foo.csv", Dictionaryxlsx = "foo.xlsx", Focus = NULL)
 #'}
 
-crfdic <- function(CRFcsv, Dictionaryxlsx){
+crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
     # Blank variables
     Output <- list()
     Domain.data <- data.frame()
@@ -31,16 +32,22 @@ crfdic <- function(CRFcsv, Dictionaryxlsx){
     for (i in 1:dim(Domain.list)[1]){
         DID = Domain.list$Domain[i]
         print(paste0("Reading data dictionary xlsx file - Tab ", DID))
-        Raw <- read.xlsx(Dictionaryxlsx, sheetName = DID, startRow = 1, stringsAsFactors = FALSE, encoding="UTF-8", colIndex = 1:6)
-        Raw$VAR <- trimws(Raw$VAR)
+        DomainRaw <- read.xlsx(Dictionaryxlsx, sheetName = DID, startRow = 1, stringsAsFactors = FALSE, encoding="UTF-8")
+        DomainRaw$VAR <- trimws(DomainRaw$VAR)
+        names(DomainRaw)[names(DomainRaw) == FocusCol] <- "Focus"
+        Raw <- DomainRaw %>%
+            select(VAR, Scope = Focus) %>%
+            filter(Scope == "V")
         Domain.data <- rbind(Domain.data, data.frame(DOMAIN = DID, Raw))
     }
 
     # Exception
-    EXCEPT <- read.xlsx(Dictionaryxlsx, sheetName = "EXCEPT", startRow = 1,
-                        stringsAsFactors = FALSE, encoding="UTF-8", colIndex = 1:5) %>%
-        select(VAR = 1, Prev1 = 2, Prev2 = 3, Focus = 4, VARLABEL = 5) %>%
-        filter(Focus == "V")
+    DomainEXCEPT <- read.xlsx(Dictionaryxlsx, sheetName = "EXCEPT", startRow = 1,
+                        stringsAsFactors = FALSE, encoding="UTF-8")
+    names(DomainEXCEPT)[names(DomainEXCEPT) == FocusCol] <- "Focus"
+    EXCEPT <- DomainEXCEPT %>%
+        select(VAR, Scope = Focus) %>%
+        filter(Scope == "V")
 
     ## PDFCSV
     transposeCRFcsv <-  t(read.csv(CRFcsv, stringsAsFactors = FALSE, header = FALSE))[,1]
@@ -53,28 +60,40 @@ crfdic <- function(CRFcsv, Dictionaryxlsx){
     PDF.variable <- suppressWarnings(PDF.variable.raw %>% filter(PVAR != "") %>%
         tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
 
-    Suffix = read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
-                       stringsAsFactors = FALSE, encoding="UTF-8", colIndex = 1:6) %>%
-        select(Section = 1, Prev1 = 2, Prev2 = 3, Focus = 4, Category = 5, Suffix = 6) %>%
-        filter(Focus == "V")
+    DomainSuffix = read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
+                       stringsAsFactors = FALSE, encoding="UTF-8")
+    names(DomainSuffix)[names(DomainSuffix) == FocusCol] <- "Focus"
+    Suffix <- DomainSuffix %>%
+        select(Suffix, Scope = Focus) %>%
+        filter(Scope == "V")
+
     Suffix.df1 = unique(na.omit(PDF.variable$At))
     Suffix.df2 = unique(na.omit(Suffix$Suffix))
 
     Output$CRF.only.Suffix <- setdiff(Suffix.df1, Suffix.df2)
     Output$Dictionary.only.Suffix <- setdiff(Suffix.df2, Suffix.df1)
-    Output$Suffix.Summary <- paste("CRF.only =", length(setdiff(Suffix.df1,Suffix.df2)),
-                                     "/ Dictionary only = ", length(setdiff(Suffix.df2,Suffix.df1)),
-                                     "/ Intersect = ", length(intersect(Suffix.df1,Suffix.df2)),
-                                     "/ Union = ", length(union(Suffix.df1,Suffix.df2)))
+    Output$Suffix.Summary <-  data.frame(
+        Table = "Suffix",
+        Parameter = c("CRF only", "Dictionary only", "Intersect", "Union"),
+        Value = c(length(setdiff(Suffix.df1,Suffix.df2)),
+                  length(setdiff(Suffix.df2,Suffix.df1)),
+                  length(intersect(Suffix.df1,Suffix.df2)),
+                  length(union(Suffix.df1,Suffix.df2)))
+    )
 
     df1 = unique(na.omit(PDF.variable$PVAR))
     df2 = unique(Variable)
 
     Output$CRF.only.Variable <- setdiff(df1, df2)
     Output$Dictionary.only.Variable <- setdiff(df2, df1)
-    Output$Variable.Summary <- paste("CRF.only =", length(setdiff(df1,df2)),
-                    "/ Dictionary only = ", length(setdiff(df2,df1)),
-                    "/ Intersect = ", length(intersect(df1,df2)),
-                    "/ Union = ", length(union(df1,df2)))
+    Output$Variable.Summary <-  data.frame(
+        Table = "Variable",
+        Parameter = c("CRF only", "Dictionary only", "Intersect", "Union"),
+        Value = c(length(setdiff(df1,df2)),
+                  length(setdiff(df2,df1)),
+                  length(intersect(df1,df2)),
+                  length(union(df1,df2)))
+    )
+
     return(Output)
 }
