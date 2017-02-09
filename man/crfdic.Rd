@@ -9,9 +9,9 @@ crfdic(CRFcsv, Dictionaryxlsx, FocusCol)
 \arguments{
 \item{CRFcsv}{A filename of CRF csv file, exported from PDFCRF}
 
-\item{Dictionaryxlsx}{A filename of data dictionary xlsx file}
+\item{Dictionaryxlsx}{A filename of data dictionary xlsx file mandatorily containing tabs of List, SUFFIX, EXCEPT}
 
-\item{Focus}{Column name of data dictionary which focuses analysis}
+\item{FocusCol}{Column name of data dictionary which focuses analysis}
 }
 \value{
 List of output data of comparison of variables between a CRF-derived csv file and a data dictionary

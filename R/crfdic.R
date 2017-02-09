@@ -4,8 +4,8 @@
 #' variable names of each file
 #'
 #' @param CRFcsv A filename of CRF csv file, exported from PDFCRF
-#' @param Dictionaryxlsx A filename of data dictionary xlsx file
-#' @param Focus Column name of data dictionary which focuses analysis
+#' @param Dictionaryxlsx A filename of data dictionary xlsx file mandatorily containing tabs of List, SUFFIX, EXCEPT
+#' @param FocusCol Column name of data dictionary which focuses analysis
 #' @importFrom tidyr separate
 #' @import dplyr
 #' @import xlsx

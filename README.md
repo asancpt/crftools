@@ -28,8 +28,9 @@ library(crftools)
 
 CRFcsv = "foo.csv"
 Dictionaryxlsx = "bar.xlsx"
+FocusCol <- "Cohort1"
 
-crfdic(CRFcsv, Dictionaryxlsx)
+(Results <- crfdic(CRFcsv, Dictionaryxlsx, FocusCol))
 ```
 
 ## Direction
