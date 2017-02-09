@@ -36,7 +36,7 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
         DomainRaw$VAR <- trimws(DomainRaw$VAR)
         names(DomainRaw)[names(DomainRaw) == FocusCol] <- "Focus"
         Raw <- DomainRaw %>%
-            select(VAR, Scope = Focus) %>%
+            select(VAR, Scope = Focus, VARLABEL) %>%
             filter(Scope == "V")
         Domain.data <- rbind(Domain.data, data.frame(DOMAIN = DID, Raw))
     }
@@ -49,20 +49,45 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
         select(VAR, Scope = Focus) %>%
         filter(Scope == "V")
 
+    # Subset
+    Variable <- bind_rows(
+        Domain.data %>% select(VAR),
+        EXCEPT %>% select(VAR)
+    ) %>%
+        ## EXCEPTION ; This should be resolved.
+        mutate(VAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", VAR)) %>%
+        mutate(VAR = gsub(pattern = "\\.5h$", replacement = "_5h", VAR)) %>%
+        mutate(VAR = gsub(pattern = "\\.25h$", replacement = "_25h", VAR)) %>%
+        mutate(VAR = gsub(pattern = "\\.75h$", replacement = "_75h", VAR)) %>%
+        #######################################
+        filter(!is.na(VAR)) %>% t() %>% as.vector()
+
     ## PDFCSV
     transposeCRFcsv <-  t(read.csv(CRFcsv, stringsAsFactors = FALSE, header = FALSE))[,1]
-    PDF.variable.raw <- data.frame(row.names = NULL, PVAR = transposeCRFcsv)
-
-    # Subset
-    Variable <- c(Domain.data %>% select(VAR) %>% filter(!is.na(VAR)) %>% t() %>% as.vector(),
-                  EXCEPT %>% select(VAR) %>% filter(!is.na(VAR)) %>% t() %>% as.vector())
+    PDF.variable.raw <- data.frame(row.names = NULL, PVAR = transposeCRFcsv) %>%
+        ## EXCEPTION ; This should be resolved.
+        mutate(PVAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", PVAR)) %>%
+        mutate(PVAR = gsub(pattern = "\\.5h$", replacement = "_5h", PVAR)) %>%
+        mutate(PVAR = gsub(pattern = "\\.25h$", replacement = "_5h", PVAR)) %>%
+        mutate(PVAR = gsub(pattern = "\\.75h$", replacement = "_5h", PVAR))
+        #######################################
 
     PDF.variable <- suppressWarnings(PDF.variable.raw %>% filter(PVAR != "") %>%
         tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
 
-    DomainSuffix = read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
-                       stringsAsFactors = FALSE, encoding="UTF-8")
+    ## Suffix
+
+    DomainSuffix <- read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
+                       stringsAsFactors = FALSE, encoding="UTF-8") %>%
+        ## EXCEPTION ; This should be resolved.
+        mutate(Suffix = gsub(pattern = "COVAL\\.", replacement = "COVAL_", Suffix)) %>%
+        mutate(Suffix = gsub(pattern = "\\.5h$", replacement = "_5h", Suffix)) %>%
+        mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
+        mutate(Suffix = gsub(pattern = "\\.75h$", replacement = "_75h", Suffix))
+        #######################################
+
     names(DomainSuffix)[names(DomainSuffix) == FocusCol] <- "Focus"
+
     Suffix <- DomainSuffix %>%
         select(Suffix, Scope = Focus) %>%
         filter(Scope == "V")
@@ -86,6 +111,9 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
 
     Output$CRF.only.Variable <- setdiff(df1, df2)
     Output$Dictionary.only.Variable <- setdiff(df2, df1)
+
+#    Output$Dictionary.only.Variable.Label <- Domain.data[Domain.data$VARLABEL %in% setdiff(df2, df1), ]
+
     Output$Variable.Summary <-  data.frame(
         Table = "Variable",
         Parameter = c("CRF only", "Dictionary only", "Intersect", "Union"),
