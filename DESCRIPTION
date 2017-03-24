@@ -1,6 +1,7 @@
 Package: crftools
 Title: CRF tools for Asan CPT
 Version: 0.1.0
+Date: 2017-03-22
 Authors@R: person("Sungpil", "Han", email = "shan@acp.kr", role = c("aut", "cre"))
 Description: Comparing CRF and data dictionary for now.
 Depends:
