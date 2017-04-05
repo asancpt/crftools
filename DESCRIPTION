@@ -1,9 +1,9 @@
 Package: crftools
 Title: CRF tools for Asan CPT
-Version: 0.1.0
-Date: 2017-03-22
+Version: 0.2.1
+Date: 2017-04-04
 Authors@R: person("Sungpil", "Han", email = "shan@acp.kr", role = c("aut", "cre"))
-Description: Comparing CRF and data dictionary for now.
+Description: Contains various features including comparing CRF and data dictionary
 Depends:
     R (>= 3.3.2)
 Encoding: UTF-8
@@ -14,4 +14,4 @@ Imports: dplyr, tidyr, xlsx
 NeedsCompilation: no
 URL: https://github.com/asancpt/crftools
 BugReports: https://github.com/asancpt/crftools/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
