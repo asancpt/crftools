@@ -4,3 +4,6 @@
 ^.*\.xlsx$
 ^.*\.pdf$
 ^tests$
+^docs$
+^cover\.jpg$
+^_pkgdown\.yml$
