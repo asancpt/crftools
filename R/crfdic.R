@@ -84,7 +84,6 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
         mutate(Suffix = gsub(pattern = "\\.5h$", replacement = "_5h", Suffix)) %>%
         mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
         mutate(Suffix = gsub(pattern = "\\.75h$", replacement = "_75h", Suffix))
-        #######################################
 
     names(DomainSuffix)[names(DomainSuffix) == FocusCol] <- "Focus"
 
@@ -112,7 +111,7 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
     Output$CRF.only.Variable <- setdiff(df1, df2)
     Output$Dictionary.only.Variable <- setdiff(df2, df1)
 
-#    Output$Dictionary.only.Variable.Label <- Domain.data[Domain.data$VARLABEL %in% setdiff(df2, df1), ]
+#   Output$Dictionary.only.Variable.Label <- Domain.data[Domain.data$VARLABEL %in% setdiff(df2, df1), ]
 
     Output$Variable.Summary <-  data.frame(
         Table = "Variable",
@@ -122,6 +121,5 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
                   length(intersect(df1,df2)),
                   length(union(df1,df2)))
     )
-
     return(Output)
 }
