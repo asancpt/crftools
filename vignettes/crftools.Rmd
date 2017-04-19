@@ -1,0 +1,17 @@
+---
+author: "Sungpil Han"
+title: "Introduction to crftools"
+output: rmarkdown::html_vignette
+vignette: >
+    %\VignetteIndexEntry{crftools}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+The goal of pkgdown is to make it easy for package developers to make elegant and useful packages websites. The defaults are tailored for smaller packages and for use on GitHub (particularly with new [`docs/` directory][docs] support), but it is flexible enough to be used as part of a bigger website. There are five parts to a pkgdown site:
+
+1. Home page
+1. Function reference
+1. Articles
+1. News
+1. Navbar

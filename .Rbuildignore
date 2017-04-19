@@ -5,3 +5,7 @@
 ^.*\.pdf$
 ^tests$
 ^inst$
+^docs$
+^cover\.jpg$
+^_pkgdown\.yml$
+
