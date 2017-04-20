@@ -17,8 +17,8 @@
 
 ggnca <- function(concData, colSubj = "Subject", colTime = "Time", colConc = "conc"){
 #concData = Theoph; colSubj = "Subject"; colTime = "Time"; colConc = "conc"
-#concData = Theoph; colSubj = "Subject"; colTime = "Time"; colConc = "conc"
-
+#concData = GGnca; colSubj = "ID"; colTime = "TIME"; colConc = "DV"
+    concData <- data.frame(concData)
     ggncaDataset <- data.frame(Subject = concData[ , colSubj],
                                Time = concData[ , colTime],
                                conc = concData[ , colConc])
