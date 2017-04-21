@@ -7,18 +7,21 @@
 ggnca(concData, colSubj = "Subject", colTime = "Time", colConc = "conc")
 }
 \arguments{
-\item{concData}{data}
+\item{concData}{concentration data table}
 
-\item{colSubj}{subject}
+\item{colSubj}{column name for subject ID}
 
-\item{colTime}{Time}
+\item{colTime}{column name for time}
 
-\item{colConc}{conc}
+\item{colConc}{column name for concentration}
+}
+\value{
+ggplot2 figures
 }
 \description{
 This draws pharmacokinetic concentration-time curve with ggplot2 packages.
 }
-\section{}{
-NA
-}
+\examples{
+ggnca(concData = Theoph, colSubj = "Subject", colTime = "Time", colConc = "conc")
 
+}

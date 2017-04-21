@@ -2,8 +2,11 @@
 
 export(crfdic)
 export(ggnca)
-import(cowplot)
+export(meansdcv)
 import(dplyr)
 import(ggplot2)
 import(xlsx)
+importFrom(cowplot,draw_plot)
+importFrom(cowplot,draw_plot_label)
+importFrom(cowplot,ggdraw)
 importFrom(tidyr,separate)

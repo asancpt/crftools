@@ -1,9 +1,9 @@
 Package: crftools
-Title: CRF tools for Asan CPT
-Version: 0.3.0
-Date: 2017-04-04
+Title: Tools for Creating, Editing, and Managing Case Report Forms of AsanCPT
+Version: 0.3.1
+Date: 2017-04-21
 Authors@R: person("Sungpil", "Han", email = "shan@acp.kr", role = c("aut", "cre"))
-Description: Contains various features including comparing CRF and data dictionary
+Description: This package contains various features including comparing CRF and data dictionary and ploting pharmacokinetic data 
 Depends:
     R (>= 3.3.2)
 Encoding: UTF-8

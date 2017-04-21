@@ -4,7 +4,7 @@
 \alias{crfdic}
 \title{Compare variable names between CRF and data dictionary}
 \usage{
-crfdic(CRFcsv, Dictionaryxlsx, FocusCol)
+crfdic(CRFcsv, Dictionaryxlsx, FocusCol = NULL)
 }
 \arguments{
 \item{CRFcsv}{A filename of CRF csv file, exported from PDFCRF}

@@ -6,17 +6,19 @@
 #' @param CRFcsv A filename of CRF csv file, exported from PDFCRF
 #' @param Dictionaryxlsx A filename of data dictionary xlsx file mandatorily containing tabs of List, SUFFIX, EXCEPT
 #' @param FocusCol Column name of data dictionary which focuses analysis
+#'
+#' @export
 #' @importFrom tidyr separate
 #' @import dplyr
 #' @import xlsx
-#' @export
+#'
 #' @return List of output data of comparison of variables between a CRF-derived csv file and a data dictionary
 #' @examples
 #'\dontrun{
 #'crfdic(CRFcsv = "foo.csv", Dictionaryxlsx = "foo.xlsx", Focus = NULL)
 #'}
 
-crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
+crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
     # Blank variables
     Output <- list()
     Domain.data <- data.frame()
@@ -34,7 +36,11 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
         print(paste0("Reading data dictionary xlsx file - Tab ", DID))
         DomainRaw <- read.xlsx(Dictionaryxlsx, sheetName = DID, startRow = 1, stringsAsFactors = FALSE, encoding="UTF-8")
         DomainRaw$VAR <- trimws(DomainRaw$VAR)
-        names(DomainRaw)[names(DomainRaw) == FocusCol] <- "Focus"
+        if (is.null(FocusCol)) {
+            DomainRaw <- DomainRaw %>% mutate(Focus = "V")
+        }  else {
+            names(DomainRaw)[names(DomainRaw) == FocusCol] <- "Focus"
+        }
         Raw <- DomainRaw %>%
             select(VAR, Scope = Focus, VARLABEL) %>%
             filter(Scope == "V")
@@ -44,7 +50,11 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
     # Exception
     DomainEXCEPT <- read.xlsx(Dictionaryxlsx, sheetName = "EXCEPT", startRow = 1,
                         stringsAsFactors = FALSE, encoding="UTF-8")
-    names(DomainEXCEPT)[names(DomainEXCEPT) == FocusCol] <- "Focus"
+    if (is.null(FocusCol)) {
+        DomainEXCEPT <- DomainEXCEPT %>% mutate(Focus = "V")
+    }  else {
+        names(DomainEXCEPT)[names(DomainEXCEPT) == FocusCol] <- "Focus"
+    }
     EXCEPT <- DomainEXCEPT %>%
         select(VAR, Scope = Focus) %>%
         filter(Scope == "V")
@@ -85,7 +95,11 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol){
         mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
         mutate(Suffix = gsub(pattern = "\\.75h$", replacement = "_75h", Suffix))
 
-    names(DomainSuffix)[names(DomainSuffix) == FocusCol] <- "Focus"
+    if (is.null(FocusCol)) {
+        DomainSuffix <- DomainSuffix %>% mutate(Focus = "V")
+    }  else {
+        names(DomainSuffix)[names(DomainSuffix) == FocusCol] <- "Focus"
+    }
 
     Suffix <- DomainSuffix %>%
         select(Suffix, Scope = Focus) %>%

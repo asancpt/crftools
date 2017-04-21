@@ -2,18 +2,22 @@
 #'
 #' This draws pharmacokinetic concentration-time curve with ggplot2 packages.
 #'
-#' @section
-#'
-#' @param concData data
-#' @param colSubj subject
-#' @param colTime Time
-#' @param colConc conc
-#'
-#' @import ggplot2
-#' @import dplyr
-#' @import cowplot
+#' @param concData concentration data table
+#' @param colSubj column name for subject ID
+#' @param colTime column name for time
+#' @param colConc column name for concentration
 #'
 #' @export
+#' @import ggplot2
+#' @import dplyr
+#' @importFrom cowplot ggdraw
+#' @importFrom cowplot draw_plot
+#' @importFrom cowplot draw_plot_label
+#'
+#' @return ggplot2 figures
+#' @examples
+#' ggnca(concData = Theoph, colSubj = "Subject", colTime = "Time", colConc = "conc")
+#'
 
 ggnca <- function(concData, colSubj = "Subject", colTime = "Time", colConc = "conc"){
 #concData = Theoph; colSubj = "Subject"; colTime = "Time"; colConc = "conc"
