@@ -59,41 +59,44 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
         select(VAR, Scope = Focus) %>%
         filter(Scope == "V")
 
-    # Subset
+    # Subset -
     Variable <- bind_rows(
         Domain.data %>% select(VAR),
         EXCEPT %>% select(VAR)
     ) %>%
-        ## EXCEPTION ; This should be resolved.
+        ## EXCEPTION ; This should be resolved. 2017-04-21 Commented out due to error
         mutate(VAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", VAR)) %>%
-        mutate(VAR = gsub(pattern = "\\.5h$", replacement = "_5h", VAR)) %>%
-        mutate(VAR = gsub(pattern = "\\.25h$", replacement = "_25h", VAR)) %>%
-        mutate(VAR = gsub(pattern = "\\.75h$", replacement = "_75h", VAR)) %>%
-        #######################################
+        mutate(VAR = sub(pattern = "\\.", replacement = "##", VAR)) %>%
+        #mutate(VAR = gsub(pattern = "\\.5h$", replacement = "_5h", VAR)) %>%
         filter(!is.na(VAR)) %>% t() %>% as.vector()
+        #mutate(VAR = gsub(pattern = "\\.25h$", replacement = "_25h", VAR)) %>%
+        #mutate(VAR = gsub(pattern = "\\.75h$", replacement = "_75h", VAR)) %>%
+        #######################################
 
     ## PDFCSV
     transposeCRFcsv <-  t(read.csv(CRFcsv, stringsAsFactors = FALSE, header = FALSE))[,1]
     PDF.variable.raw <- data.frame(row.names = NULL, PVAR = transposeCRFcsv) %>%
-        ## EXCEPTION ; This should be resolved.
         mutate(PVAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", PVAR)) %>%
-        mutate(PVAR = gsub(pattern = "\\.5h$", replacement = "_5h", PVAR)) %>%
-        mutate(PVAR = gsub(pattern = "\\.25h$", replacement = "_5h", PVAR)) %>%
-        mutate(PVAR = gsub(pattern = "\\.75h$", replacement = "_5h", PVAR))
-        #######################################
+        mutate(PVAR = sub(pattern = "\\.", replacement = "##", PVAR))
+        #mutate(PVAR = gsub(pattern = "\\.5h$", replacement = "_5h", PVAR))
+        ## EXCEPTION ; This should be resolved. 2017-04-21 Commented out due to error
+        #mutate(PVAR = gsub(pattern = "\\.25h$", replacement = "_5h", PVAR)) %>%
+        #mutate(PVAR = gsub(pattern = "\\.75h$", replacement = "_5h", PVAR))
+        ########################################
 
     PDF.variable <- suppressWarnings(PDF.variable.raw %>% filter(PVAR != "") %>%
-        tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
+        tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "##"))
 
     ## Suffix
 
     DomainSuffix <- read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
                        stringsAsFactors = FALSE, encoding="UTF-8") %>%
         ## EXCEPTION ; This should be resolved.
-        mutate(Suffix = gsub(pattern = "COVAL\\.", replacement = "COVAL_", Suffix)) %>%
-        mutate(Suffix = gsub(pattern = "\\.5h$", replacement = "_5h", Suffix)) %>%
-        mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
-        mutate(Suffix = gsub(pattern = "\\.75h$", replacement = "_75h", Suffix))
+        mutate(Suffix = gsub(pattern = "COVAL\\.", replacement = "COVAL_", Suffix))
+        #mutate(Suffix = sub(pattern = "\\.", replacement = "##", Suffix))
+        #mutate(Suffix = gsub(pattern = "\\.5h$", replacement = "_5h", Suffix))
+        #mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
+        #mutate(Suffix = gsub(pattern = "\\.75h$", replacement = "_75h", Suffix))
 
     if (is.null(FocusCol)) {
         DomainSuffix <- DomainSuffix %>% mutate(Focus = "V")

@@ -15,3 +15,4 @@
 meansdcv <- function(x){
     paste0(mean(x), "|", sd(x))
 }
+
