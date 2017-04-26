@@ -10,7 +10,7 @@ meansdcv(x)
 \item{x}{numeric vector}
 }
 \description{
-This function combines mean, standard deviation and coefficient of variation to create reporting tables.
+This function combines mean, standard deviation and coefficient of variation to create reporting tables. This requires `dplyr` package.
 }
 \examples{
 library(dplyr)

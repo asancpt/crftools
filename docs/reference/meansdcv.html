@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compare variable names between CRF and data dictionary — crfdic • crftools</title>
+<title>Combining mean, standard deviation and coefficient of variation — meansdcv • crftools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -76,50 +76,40 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compare variable names between CRF and data dictionary</h1>
+    <h1>Combining mean, standard deviation and coefficient of variation</h1>
     </div>
 
     
-    <p><code>crfdic</code> uses CRF-derived csv file and a data dictionary excel to compare
-variable names of each file</p>
+    <p>This function combines mean, standard deviation and coefficient of variation to create reporting tables.</p>
     
 
-    <pre class="usage"><span class='fu'>crfdic</span>(<span class='no'>CRFcsv</span>, <span class='no'>Dictionaryxlsx</span>, <span class='kw'>FocusCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>meansdcv</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>CRFcsv</th>
-      <td><p>A filename of CRF csv file, exported from PDFCRF</p></td>
-    </tr>
-    <tr>
-      <th>Dictionaryxlsx</th>
-      <td><p>A filename of data dictionary xlsx file mandatorily containing tabs of List, SUFFIX, EXCEPT</p></td>
-    </tr>
-    <tr>
-      <th>FocusCol</th>
-      <td><p>Column name of data dictionary which focuses analysis</p></td>
+      <th>x</th>
+      <td><p>numeric vector</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>List of output data of comparison of variables between a CRF-derived csv file and a data dictionary</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
-  <span class='fu'>crfdic</span>(<span class='kw'>CRFcsv</span> <span class='kw'>=</span> <span class='st'>"foo.csv"</span>, <span class='kw'>Dictionaryxlsx</span> <span class='kw'>=</span> <span class='st'>"foo.xlsx"</span>, <span class='kw'>Focus</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-})</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'>tabNCA</span>(<span class='no'>Theoph</span>, <span class='kw'>dose</span><span class='kw'>=</span><span class='fl'>500</span>, <span class='kw'>concUnit</span><span class='kw'>=</span><span class='st'>"mg/L"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>as.data.frame</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>summarise_all</span>(<span class='no'>meansdcv</span>)</div><div class='output co'>#&gt; <span class='error'>Error in tabNCA(Theoph, dose = 500, concUnit = "mg/L"): could not find function "tabNCA"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 

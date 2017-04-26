@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compare variable names between CRF and data dictionary — crfdic • crftools</title>
+<title>ggplot for pharmacokinetic concentration-time curve — ggnca • crftools</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -76,42 +76,46 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compare variable names between CRF and data dictionary</h1>
+    <h1>ggplot for pharmacokinetic concentration-time curve</h1>
     </div>
 
     
-    <p><code>crfdic</code> uses CRF-derived csv file and a data dictionary excel to compare
-variable names of each file</p>
+    <p>This draws pharmacokinetic concentration-time curve with ggplot2 packages.</p>
     
 
-    <pre class="usage"><span class='fu'>crfdic</span>(<span class='no'>CRFcsv</span>, <span class='no'>Dictionaryxlsx</span>, <span class='kw'>FocusCol</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>ggnca</span>(<span class='no'>concData</span>, <span class='kw'>colSubj</span> <span class='kw'>=</span> <span class='st'>"Subject"</span>, <span class='kw'>colTime</span> <span class='kw'>=</span> <span class='st'>"Time"</span>, <span class='kw'>colConc</span> <span class='kw'>=</span> <span class='st'>"conc"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>CRFcsv</th>
-      <td><p>A filename of CRF csv file, exported from PDFCRF</p></td>
+      <th>concData</th>
+      <td><p>concentration data table</p></td>
     </tr>
     <tr>
-      <th>Dictionaryxlsx</th>
-      <td><p>A filename of data dictionary xlsx file mandatorily containing tabs of List, SUFFIX, EXCEPT</p></td>
+      <th>colSubj</th>
+      <td><p>column name for subject ID</p></td>
     </tr>
     <tr>
-      <th>FocusCol</th>
-      <td><p>Column name of data dictionary which focuses analysis</p></td>
+      <th>colTime</th>
+      <td><p>column name for time</p></td>
+    </tr>
+    <tr>
+      <th>colConc</th>
+      <td><p>column name for concentration</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of output data of comparison of variables between a CRF-derived csv file and a data dictionary</p>
+    <p>ggplot2 figures</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
-  <span class='fu'>crfdic</span>(<span class='kw'>CRFcsv</span> <span class='kw'>=</span> <span class='st'>"foo.csv"</span>, <span class='kw'>Dictionaryxlsx</span> <span class='kw'>=</span> <span class='st'>"foo.xlsx"</span>, <span class='kw'>Focus</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-})</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>ggnca</span>(<span class='kw'>concData</span> <span class='kw'>=</span> <span class='no'>Theoph</span>, <span class='kw'>colSubj</span> <span class='kw'>=</span> <span class='st'>"Subject"</span>, <span class='kw'>colTime</span> <span class='kw'>=</span> <span class='st'>"Time"</span>, <span class='kw'>colConc</span> <span class='kw'>=</span> <span class='st'>"conc"</span>)</div><div class='output co'>#&gt; <span class='message'>Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+#&gt; <span class='message'>replace the existing scale.</span></div><div class='output co'>#&gt; <span class='message'>Scale for 'y' is already present. Adding another scale for 'y', which will</span>
+#&gt; <span class='message'>replace the existing scale.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous y-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous y-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous y-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous y-axis</span></div><img src='ggnca-8.png' alt='' width='540' height='400' /><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
