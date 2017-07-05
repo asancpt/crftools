@@ -1,4 +1,4 @@
-#' Compare variable names between CRF and data dictionary
+#' Compare variable names between CRF and data dictionary 2
 #'
 #' \code{crfdic} uses CRF-derived csv file and a data dictionary excel to compare
 #' variable names of each file
@@ -11,6 +11,7 @@
 #' @importFrom tidyr separate
 #' @import dplyr
 #' @import xlsx
+#' @import readr
 #'
 #' @return List of output data of comparison of variables between a CRF-derived csv file and a data dictionary
 #' @examples
@@ -18,7 +19,7 @@
 #'crfdic(CRFcsv = "foo.csv", Dictionaryxlsx = "foo.xlsx", Focus = NULL)
 #'}
 
-crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
+crfdic2 <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
 
   # Blank variables
   Output <- list()
@@ -32,23 +33,25 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
     filter(!is.na(Domain2)) %>%
     mutate(Domain = paste(Num, Domain2, sep = "."))
 
-  for (i in 1:dim(Domain.list)[1]){
-    DID = Domain.list$Domain[i]
+  for (i in 1:nrow(Domain.list)){
+    DID <- Domain.list$Domain[i]
     print(paste0("Reading data dictionary xlsx file - Tab ", DID))
     DomainRaw <- read.xlsx(Dictionaryxlsx, sheetName = DID, startRow = 1, stringsAsFactors = FALSE, encoding="UTF-8")
     DomainRaw$VAR <- trimws(DomainRaw$VAR)
+
     if (is.null(FocusCol)) {
       DomainRaw <- DomainRaw %>% mutate(Focus = "V")
     }  else {
       names(DomainRaw)[names(DomainRaw) == FocusCol] <- "Focus"
     }
+
     Raw <- DomainRaw %>%
       select(VAR, Scope = Focus, VARLABEL) %>%
       filter(Scope == "V")
     Domain.data <- rbind(Domain.data, data.frame(DOMAIN = DID, Raw))
   }
 
-  # Exception
+  # Exceptions
   DomainEXCEPT <- read.xlsx(Dictionaryxlsx, sheetName = "EXCEPT", startRow = 1,
                             stringsAsFactors = FALSE, encoding="UTF-8")
   if (is.null(FocusCol)) {
@@ -66,34 +69,40 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
     EXCEPT %>% select(VAR)
   ) %>%
     ## EXCEPTION ; This should be resolved. 2017-04-21 Commented out due to error
-    mutate(VAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", VAR)) %>%
-    mutate(VAR = sub(pattern = "\\.", replacement = "##", VAR)) %>%
-    #mutate(VAR = gsub(pattern = "\\.5h$", replacement = "_5h", VAR)) %>%
+    mutate(VAR = sub(pattern = "COVAL\\.", replacement = "COVAL_", VAR)) %>%
+    mutate(VAR = sub(pattern = "\\.", replacement = "#", VAR)) %>%
     filter(!is.na(VAR)) %>% t() %>% as.vector()
-  #mutate(VAR = gsub(pattern = "\\.25h$", replacement = "_25h", VAR)) %>%
-  #mutate(VAR = gsub(pattern = "\\.75h$", replacement = "_75h", VAR)) %>%
-  #######################################
 
-  ## PDFCSV
-  transposeCRFcsv <-  t(read.csv(CRFcsv, stringsAsFactors = FALSE, header = FALSE))[,1]
-  PDF.variable.raw <- data.frame(row.names = NULL, PVAR = transposeCRFcsv) %>%
-    mutate(PVAR = gsub(pattern = "COVAL\\.", replacement = "COVAL_", PVAR)) %>%
-    mutate(PVAR = sub(pattern = "\\.", replacement = "##", PVAR))
-  #mutate(PVAR = gsub(pattern = "\\.5h$", replacement = "_5h", PVAR))
-  ## EXCEPTION ; This should be resolved. 2017-04-21 Commented out due to error
-  #mutate(PVAR = gsub(pattern = "\\.25h$", replacement = "_5h", PVAR)) %>%
-  #mutate(PVAR = gsub(pattern = "\\.75h$", replacement = "_5h", PVAR))
-  ########################################
+    # mutate(VAR = gsub(pattern = "\\.5h$", replacement = "_5h", VAR)) %>%
+    # mutate(VAR = gsub(pattern = "\\.25h$", replacement = "_25h", VAR)) %>%
+    # mutate(VAR = gsub(pattern = "\\.75h$", replacement = "_75h", VAR)) %>%
 
-  PDF.variable <- suppressWarnings(PDF.variable.raw %>% filter(PVAR != "") %>%
-                                     tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "##"))
+  # PDF-derived VAR ----
 
-  ## Suffix
+  pvarnames <- c(names(read_csv(CRFcsv[1])), names(read_csv(CRFcsv[2])))
+  PDF.variable.raw <- tibble(PVAR = pvarnames) %>%
+    mutate(PVAR = sub(pattern = "COVAL\\.", replacement = "COVAL_", PVAR)) %>%
+    mutate(PVAR = sub(pattern = "\\.", replacement = "#", PVAR)) %>%
+    filter(PVAR != "X1") # X1 is converted from blank column name.
+
+    # EXCEPTION ; This should be resolved. 2017-04-21 Commented out due to error
+    # mutate(PVAR = gsub(pattern = "\\.5h$", replacement = "_5h", PVAR)) %>%
+    # mutate(PVAR = gsub(pattern = "\\.25h$", replacement = "_5h", PVAR)) %>%
+    # mutate(PVAR = gsub(pattern = "\\.75h$", replacement = "_5h", PVAR))
+
+  PDF.variable <- suppressWarnings(
+    PDF.variable.raw %>%
+      filter(PVAR != "") %>%
+      tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "#"))
+      #tidyr::separate(col = PVAR, into = c("PVAR", "At"), sep = "\\."))
+
+  # Suffix and variables from PDF-derived VAR
 
   DomainSuffix <- read.xlsx(Dictionaryxlsx, sheetName = "SUFFIX", startRow=1,
                             stringsAsFactors = FALSE, encoding="UTF-8") %>%
-    ## EXCEPTION ; This should be resolved.
     mutate(Suffix = gsub(pattern = "COVAL\\.", replacement = "COVAL_", Suffix))
+
+  ## EXCEPTION ; This should be resolved.
   #mutate(Suffix = sub(pattern = "\\.", replacement = "##", Suffix))
   #mutate(Suffix = gsub(pattern = "\\.5h$", replacement = "_5h", Suffix))
   #mutate(Suffix = gsub(pattern = "\\.25h$", replacement = "_25h", Suffix)) %>%
@@ -109,8 +118,8 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
     select(Suffix, Scope = Focus) %>%
     filter(Scope == "V")
 
-  Suffix.df1 = unique(na.omit(PDF.variable$At))
-  Suffix.df2 = unique(na.omit(Suffix$Suffix))
+  Suffix.df1 <- sub(pattern = "#", replacement = "\\.", unique(na.omit(PDF.variable$At)))
+  Suffix.df2 <- sub(pattern = "#", replacement = "\\.", unique(na.omit(Suffix$Suffix)))
 
   Output$CRF.only.Suffix <- setdiff(Suffix.df1, Suffix.df2)
   Output$Dictionary.only.Suffix <- setdiff(Suffix.df2, Suffix.df1)
@@ -126,8 +135,8 @@ crfdic <- function(CRFcsv, Dictionaryxlsx, FocusCol = NULL){
   df1 = unique(na.omit(PDF.variable$PVAR))
   df2 = unique(Variable)
 
-  Output$CRF.only.Variable <- setdiff(df1, df2)
-  Output$Dictionary.only.Variable <- setdiff(df2, df1)
+  Output$CRF.only.Variable <- sub(pattern = "#", replacement = "\\.", setdiff(df1, df2))
+  Output$Dictionary.only.Variable <- sub(pattern = "#", replacement = "\\.", setdiff(df2, df1))
 
   #   Output$Dictionary.only.Variable.Label <- Domain.data[Domain.data$VARLABEL %in% setdiff(df2, df1), ]
 

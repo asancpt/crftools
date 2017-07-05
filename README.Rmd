@@ -1,8 +1,6 @@
 # R package: crftools
 
-> Put your heart, mind, and soul into even your smallest acts. This is the secret of success. - *Swami Sivananda*
-
-이것은 R 패키지 `crftools` 입니다. 
+R 패키지 `crftools` 입니다. 
 
 ## Description
 
